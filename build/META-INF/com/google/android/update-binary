@@ -38,6 +38,8 @@ fi;
 ui_print " - Moving binary file"
 cd
 cd /tmp/kimcil
+mv -f vendor/lib/libsecure_storage.so /system/vendor/lib/libsecure_storage.so
+mv -f vendor/lib64/libsecure_storage.so /system/vendor/lib64/libsecure_storage.so
 mv -f files/sqlite3 /system/xbin
 mv -f files/zip /system/xbin
 mv -f files/fstrim /system/xbin
@@ -45,6 +47,8 @@ mv -f files/busybox /system/xbin
 
 ui_print " - Setting permissions"
 
+chmod 0644 /system/vendor/lib/libsecure_storage.so
+chmod 0644 /system/vendor/lib64/libsecure_storage.so
 chmod 0755 /system/xbin/sqlite3
 chmod 0755 /system/xbin/zip
 chmod 0755 /system/xbin/fstrim
@@ -57,7 +61,7 @@ ui_print " - Unmounting partition /system"
 umount /system > /dev/null 2>&1
 
 ui_print " "
-ui_print "............. .............."
+ui_print "............................"
 ui_print "FINISHED"
 ui_print "............................"
 rm -rf /tmp/kimcil
