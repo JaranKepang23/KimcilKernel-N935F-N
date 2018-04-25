@@ -1,0 +1,68 @@
+#!/system/bin/sh
+
+cat << CTAG
+{
+    name:"ABOUT",
+    elements:[
+	{ SLiveLabel:{
+		description:"\n",
+		refresh:10000000,
+		action:"echo Hello"
+	}},
+	{ SLiveLabel:{
+		refresh:10000000,
+		style:"bold",
+		action:"echo Welcome to the Nougat Kimcil-Kernel!"
+	}},
+	{ SLiveLabel:{
+		refresh:10000000,
+		action:"echo by"
+	}},
+	{ SLiveLabel:{
+		refresh:10000000,
+		style:"bold",
+		action:"echo Jaran Kepang@XDA"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SButton:{
+		label:"PayPal Donation",
+		action:"am start -a android.intent.action.VIEW -d http://google.com > /dev/null;
+		echo Opening browser...;"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	`if [ "$(grep "N935f" /proc/cmdline)" != "" ] || [ "$(grep "N935FD" /proc/cmdline)" != "" ]; then
+		echo '{ SButton:{
+			label:"Kimcil-Kernel thread @ XDA",
+			action:"am start -a android.intent.action.VIEW -d http://google.com > /dev/null;
+			echo Opening browser...;"
+		}},
+		{ SSpacer:{
+			height:1
+		}},'
+	elif [ "$(grep "G935F" /proc/cmdline)" != "" ] || [ "$(grep "G935FD" /proc/cmdline)" != "" ] || [ "$(grep "G935W8" /proc/cmdline)" != "" ]; then
+		echo '{ SButton:{
+			label:"Kimcil-Kernel thread @ XDA",
+			action:"am start -a android.intent.action.VIEW -d http://google.com > /dev/null;
+			echo Opening browser...;"
+		}},
+		{ SSpacer:{
+			height:2
+		}},'
+	fi;`
+	{ SPane:{
+		title:"Up Time:"
+	}},
+	{ SSpacer:{
+		height:1
+	}},
+	{ SLiveLabel:{
+		refresh:1500,
+		action:"live LiveUpTime"
+	}},
+    ]
+}
+CTAG

@@ -1,0 +1,64 @@
+#!/sbin/sh
+
+OUTFD=$2
+ZIP=$3
+
+ui_print() {
+  echo -n -e "ui_print $1\n" > /proc/self/fd/$OUTFD
+  echo -n -e "ui_print\n" > /proc/self/fd/$OUTFD
+}
+
+cd /tmp
+rm -rf kimcil
+mkdir kimcil
+cd kimcil
+unzip -o "$ZIP"
+
+ui_print " - Checking BLmodel"
+getprop ro.boot.bootloader >> BLmodel
+
+ui_print " ";
+ui_print " - Mounting system partition"
+mount /system
+
+ui_print " - Mounting data partition"
+mount /data
+
+ui_print " - Installing KimcilKernel"
+
+if grep -q N935 BLmodel; then
+	cat gracelte-eur.img > /dev/block/platform/155a0000.ufs/by-name/BOOT
+	ui_print " - Flashing N935X kernel"
+else
+	echo "Not a supported model. Dont flash any kernel!"
+	ui_print " - Model not support, no kernel flashed"
+	exit 10;
+fi;
+
+ui_print " - Moving binary file"
+cd
+cd /tmp/kimcil
+mv -f files/sqlite3 /system/xbin
+mv -f files/zip /system/xbin
+mv -f files/fstrim /system/xbin
+mv -f files/busybox /system/xbin
+
+ui_print " - Setting permissions"
+
+chmod 0755 /system/xbin/sqlite3
+chmod 0755 /system/xbin/zip
+chmod 0755 /system/xbin/fstrim
+chmod 0755 /system/xbin/busybox
+
+ui_print " - Unmounting partition /data"
+umount /data > /dev/null 2>&1
+
+ui_print " - Unmounting partition /system"
+umount /system > /dev/null 2>&1
+
+ui_print " "
+ui_print "............. .............."
+ui_print "FINISHED"
+ui_print "............................"
+rm -rf /tmp/kimcil
+sync
